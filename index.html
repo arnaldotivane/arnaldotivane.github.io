@@ -1,3 +1,58 @@
+<script type="module">
+  import { initializeApp } from "https://www.gstatic.com/firebasejs/11.9.1/firebase-app.js";
+  import { getAuth, onAuthStateChanged, signInWithEmailAndPassword, signOut } from "https://www.gstatic.com/firebasejs/11.9.1/firebase-auth.js";
+
+  const firebaseConfig = {
+    apiKey: "AIzaSyCPE2ACUNDl05KeH2EdXBJP3lyiNkxAc6o",
+    authDomain: "arnaldotivane-e0855.firebaseapp.com",
+    projectId: "arnaldotivane-e0855",
+    storageBucket: "arnaldotivane-e0855.appspot.com",
+    messagingSenderId: "1072314070748",
+    appId: "1:1072314070748:web:63468e83128cf3aa44a619"
+  };
+
+  const app = initializeApp(firebaseConfig);
+  const auth = getAuth();
+
+  // Verificar estado do utilizador
+  onAuthStateChanged(auth, user => {
+    if (user) {
+      document.getElementById('content').style.display = 'block'; // mostrar conteúdo
+      document.getElementById('login-form').style.display = 'none'; // esconder login
+    } else {
+      document.getElementById('content').style.display = 'none'; // esconder conteúdo
+      document.getElementById('login-form').style.display = 'block'; // mostrar login
+    }
+  });
+
+  // Função para fazer login
+  window.login = () => {
+    const email = document.getElementById('email').value;
+    const password = document.getElementById('password').value;
+    signInWithEmailAndPassword(auth, email, password)
+      .catch(error => alert('Erro: ' + error.message));
+  };
+
+  // Função para logout
+  window.logout = () => {
+    signOut(auth);
+  };
+</script>
+
+<!-- Formulário de login -->
+<div id="login-form" style="max-width:300px; margin:auto;">
+  <h2>Login</h2>
+  <input id="email" type="email" placeholder="Email" style="width:100%; margin-bottom:10px;" />
+  <input id="password" type="password" placeholder="Password" style="width:100%; margin-bottom:10px;" />
+  <button onclick="login()" style="width:100%;">Entrar</button>
+</div>
+
+<!-- Conteúdo protegido -->
+<div id="content" style="display:none;">
+  <h1>Bem-vindo ao site!</h1>
+  <button onclick="logout()">Sair</button>
+  <!-- Aqui coloca o conteúdo do site -->
+</div>
 <!DOCTYPE html>
 <html lang="pt">
 <!DOCTYPE html>
