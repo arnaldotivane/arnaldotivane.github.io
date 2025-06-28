@@ -5,7 +5,139 @@
 <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
-    <title>Cleusia Brito - Início</title>
+<!DOCTYPE html>
+<html lang="pt-PT">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Autenticação Firebase Modular</title>
+  <style>
+    body { font-family: Arial, sans-serif; max-width: 400px; margin: 30px auto; }
+    input, button { width: 100%; margin: 8px 0; padding: 10px; }
+    #user-details { margin-top: 20px; padding: 10px; background: #efefef; }
+    #logout-btn { background-color: #f44336; color: white; border: none; cursor: pointer; }
+  </style>
+</head>
+<body>
+
+<h2>Autenticação Firebase (Modular)</h2>
+
+<div id="auth-forms">
+  <div id="register-form">
+    <h3>Registar Utilizador</h3>
+    <input type="email" id="reg-email" placeholder="Email" />
+    <input type="password" id="reg-password" placeholder="Senha" />
+    <button id="register-btn">Registar</button>
+  </div>
+
+  <hr />
+
+  <div id="login-form">
+    <h3>Entrar</h3>
+    <input type="email" id="login-email" placeholder="Email" />
+    <input type="password" id="login-password" placeholder="Senha" />
+    <button id="login-btn">Entrar</button>
+  </div>
+</div>
+
+<div id="user-details" style="display:none;">
+  <h3>Bem-vindo, <span id="user-email"></span>!</h3>
+  <button id="logout-btn">Sair</button>
+</div>
+
+<p id="message"></p>
+
+<script type="module">
+  import { initializeApp } from "https://www.gstatic.com/firebasejs/11.9.1/firebase-app.js";
+  import { getAuth, createUserWithEmailAndPassword, signInWithEmailAndPassword, signOut, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/11.9.1/firebase-auth.js";
+
+  const firebaseConfig = {
+    apiKey: "AIzaSyCPE2ACUNDl05KeH2EdXBJP3lyiNkxAc6o",
+    authDomain: "arnaldotivane-e0855.firebaseapp.com",
+    projectId: "arnaldotivane-e0855",
+    storageBucket: "arnaldotivane-e0855.firebasestorage.app",
+    messagingSenderId: "1072314070748",
+    appId: "1:1072314070748:web:63468e83128cf3aa44a619",
+    measurementId: "G-KF9P1S66XW"
+  };
+
+  // Inicializar Firebase
+  const app = initializeApp(firebaseConfig);
+  const auth = getAuth(app);
+
+  const messageEl = document.getElementById("message");
+  const userDetailsEl = document.getElementById("user-details");
+  const authFormsEl = document.getElementById("auth-forms");
+  const userEmailEl = document.getElementById("user-email");
+
+  const regEmailInput = document.getElementById("reg-email");
+  const regPassInput = document.getElementById("reg-password");
+  const loginEmailInput = document.getElementById("login-email");
+  const loginPassInput = document.getElementById("login-password");
+  const registerBtn = document.getElementById("register-btn");
+  const loginBtn = document.getElementById("login-btn");
+  const logoutBtn = document.getElementById("logout-btn");
+
+  registerBtn.addEventListener('click', () => {
+    const email = regEmailInput.value;
+    const password = regPassInput.value;
+
+    createUserWithEmailAndPassword(auth, email, password)
+      .then((userCredential) => {
+        messageEl.textContent = "Registo efetuado com sucesso!";
+        clearInputs();
+      })
+      .catch((error) => {
+        messageEl.textContent = "Erro no registo: " + error.message;
+      });
+  });
+
+  loginBtn.addEventListener('click', () => {
+    const email = loginEmailInput.value;
+    const password = loginPassInput.value;
+
+    signInWithEmailAndPassword(auth, email, password)
+      .then((userCredential) => {
+        messageEl.textContent = "Login efetuado com sucesso!";
+        clearInputs();
+      })
+      .catch((error) => {
+        messageEl.textContent = "Erro no login: " + error.message;
+      });
+  });
+
+  logoutBtn.addEventListener('click', () => {
+    signOut(auth).then(() => {
+      messageEl.textContent = "Sessão terminada.";
+    });
+  });
+
+  function clearInputs() {
+    regEmailInput.value = "";
+    regPassInput.value = "";
+    loginEmailInput.value = "";
+    loginPassInput.value = "";
+  }
+
+  function updateUI(user) {
+    if (user) {
+      userEmailEl.textContent = user.email;
+      userDetailsEl.style.display = "block";
+      authFormsEl.style.display = "none";
+    } else {
+      userEmailEl.textContent = "";
+      userDetailsEl.style.display = "none";
+      authFormsEl.style.display = "block";
+    }
+  }
+
+  onAuthStateChanged(auth, (user) => {
+    updateUI(user);
+  });
+</script>
+
+</body>
+</html>    <title>Cleusia Brito - Início</title>
     <link rel="stylesheet" href="css/style.css" />
 </head>
 <body>
